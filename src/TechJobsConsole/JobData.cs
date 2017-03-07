@@ -83,7 +83,7 @@ namespace TechJobsConsole
                     string theHeaderString = "";
                     theHeaderString = rowHeader[0][i];
                     string thisParticularDictionaryEntry = AllJobs[j][theHeaderString];
-                    if (thisParticularDictionaryEntry.Contains(theSearchValue))
+                    if (thisParticularDictionaryEntry.IndexOf(theSearchValue, System.StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         Dictionary<string, string> rowDict = new Dictionary<string, string>();
                         for (int z = 0; z < howManyHeaderLabels; z++)
