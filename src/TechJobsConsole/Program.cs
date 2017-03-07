@@ -121,6 +121,12 @@ namespace TechJobsConsole
         }
         private static void PrintJobs(List<Dictionary<string, string>> someJobs)
         {
+            Console.WriteLine(someJobs.Count);
+            if (someJobs.Count == 0)
+            {
+                Console.WriteLine("Your search matched no results");
+                Console.ReadLine();
+            }
             foreach (var dictionary in someJobs)
             {
                 Console.WriteLine("*****");
