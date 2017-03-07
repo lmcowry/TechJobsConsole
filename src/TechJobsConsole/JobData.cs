@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -38,9 +39,78 @@ namespace TechJobsConsole
             return values;
         }
 
+        public static List<Dictionary<string, string>> FindByValue(string theSearchValue)
+        {
+
+            LoadData();
+
+            List<string[]> rowHeader = new List<string[]>();
+
+            // makes the headers into an array
+            using (StreamReader reader = File.OpenText("job_data.csv"))
+            {
+                string line = reader.ReadLine();
+                string[] rowArrray = CSVRowToStringArray(line);
+                if (rowArrray.Length > 0)
+                {
+                    rowHeader.Add(rowArrray);
+                }
+            }
+
+            List<string> foundExamples = new List<string>();
+            //this counting of an array only works with using System.LINQ
+            int howManyHeaderLabels = rowHeader[0].Count();
+            //this'll be what I return
+            List<Dictionary<string, string>> listOfDictOfFoundExamples = new List<Dictionary<string, string>>();
+
+            //makes the headers into a list
+            List<string> theHeaders = new List<string>();
+            for (int y = 0; y < howManyHeaderLabels; y++)
+            {
+                string theHeaderString = "";
+                theHeaderString = rowHeader[0][y];
+                theHeaders.Add(theHeaderString);
+            }
+
+
+            //goes through each of the dictionaries in the AllJobs list
+            for (int j = 0; j < AllJobs.Count; j++)
+            {
+
+                //goes through each of the dictionary entries
+                for (int i = 0; i < howManyHeaderLabels; i++)
+                {
+                    string theHeaderString = "";
+                    theHeaderString = rowHeader[0][i];
+                    string thisParticularDictionaryEntry = AllJobs[j][theHeaderString];
+                    if (thisParticularDictionaryEntry.Contains(theSearchValue))
+                    {
+                        Dictionary<string, string> rowDict = new Dictionary<string, string>();
+                        for (int z = 0; z < howManyHeaderLabels; z++)
+                        {
+                            // this headerstring will go through each header string again
+                            string theKeyValue = "";
+                            string theEntryValue = "";
+                            theKeyValue = rowHeader[0][z];
+                            theEntryValue = AllJobs[j][theKeyValue];
+                            rowDict.Add(theKeyValue, theEntryValue);
+                        }
+                        listOfDictOfFoundExamples.Add(rowDict);
+                    }
+
+                }
+            }
+
+
+
+            return listOfDictOfFoundExamples;
+
+
+        }
+
         public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string value)
         {
-            // load data, if not already loaded
+
             LoadData();
 
             List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
